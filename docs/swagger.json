@@ -1,0 +1,458 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample API",
+        "title": "GST Billing API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/v1/login": {
+            "post": {
+                "description": "Login user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Login user",
+                "parameters": [
+                    {
+                        "description": "Login request",
+                        "name": "login",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.LoginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/login/bill/generate": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Generate bill",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GenerateBill"
+                ],
+                "summary": "Generate bill",
+                "parameters": [
+                    {
+                        "description": "GenerateBill request",
+                        "name": "billRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.GenerateBillRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Bill"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/login/products/add": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Add product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Add product",
+                "parameters": [
+                    {
+                        "description": "Add product request",
+                        "name": "addProductRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.AddProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.AddProductResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/login/products/search": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Search product",
+                "consumes": [
+                    "application/json",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Search product",
+                "parameters": [
+                    {
+                        "description": "Search product request",
+                        "name": "searchProductRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SearchProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SearchProductResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.AddProductRequest": {
+            "type": "object",
+            "required": [
+                "description",
+                "name",
+                "product_code",
+                "product_gst",
+                "product_price",
+                "quantity"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "This is a book"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Book"
+                },
+                "product_code": {
+                    "type": "string",
+                    "example": "P001"
+                },
+                "product_gst": {
+                    "type": "number",
+                    "example": 10
+                },
+                "product_price": {
+                    "type": "number",
+                    "example": 100
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.AddProductResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Product added successfully"
+                }
+            }
+        },
+        "models.Bill": {
+            "type": "object",
+            "properties": {
+                "bill_date": {
+                    "type": "string"
+                },
+                "biller_user_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "items": {
+                    "description": "One-to-many relationship with BillItem",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.BillItem"
+                    }
+                },
+                "subtotal": {
+                    "type": "number"
+                },
+                "total": {
+                    "type": "number"
+                },
+                "total_tax": {
+                    "type": "number"
+                }
+            }
+        },
+        "models.BillItem": {
+            "type": "object",
+            "properties": {
+                "Product_code": {
+                    "description": "Reference to the product",
+                    "type": "string"
+                },
+                "bill_id": {
+                    "description": "Reference to the related bill",
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "product_gst": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BillItemRequest": {
+            "type": "object",
+            "required": [
+                "productCode",
+                "quantity"
+            ],
+            "properties": {
+                "productCode": {
+                    "type": "string",
+                    "example": "P12"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 20
+                }
+            }
+        },
+        "models.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.GenerateBillRequest": {
+            "type": "object",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.BillItemRequest"
+                    }
+                }
+            }
+        },
+        "models.LoginRequest": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "Vipin@123"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "VIPIN"
+                }
+            }
+        },
+        "models.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Product": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "product_code": {
+                    "type": "string"
+                },
+                "product_description": {
+                    "type": "string"
+                },
+                "product_gst": {
+                    "type": "number"
+                },
+                "product_name": {
+                    "type": "string"
+                },
+                "product_price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.SearchProductRequest": {
+            "type": "object",
+            "required": [
+                "productCode",
+                "productName"
+            ],
+            "properties": {
+                "productCode": {
+                    "type": "string",
+                    "example": "P001"
+                },
+                "productName": {
+                    "type": "string",
+                    "example": "Book"
+                }
+            }
+        },
+        "models.SearchProductResponse": {
+            "type": "object",
+            "properties": {
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Product"
+                    }
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "x-extention-openapi": "{\"example\": \"This is a sample API\"}"
+        }
+    }
+}

@@ -1,0 +1,303 @@
+definitions:
+  models.AddProductRequest:
+    properties:
+      description:
+        example: This is a book
+        type: string
+      name:
+        example: Book
+        type: string
+      product_code:
+        example: P001
+        type: string
+      product_gst:
+        example: 10
+        type: number
+      product_price:
+        example: 100
+        type: number
+      quantity:
+        type: integer
+    required:
+    - description
+    - name
+    - product_code
+    - product_gst
+    - product_price
+    - quantity
+    type: object
+  models.AddProductResponse:
+    properties:
+      message:
+        example: Product added successfully
+        type: string
+    type: object
+  models.Bill:
+    properties:
+      bill_date:
+        type: string
+      biller_user_name:
+        type: string
+      id:
+        type: integer
+      items:
+        description: One-to-many relationship with BillItem
+        items:
+          $ref: '#/definitions/models.BillItem'
+        type: array
+      subtotal:
+        type: number
+      total:
+        type: number
+      total_tax:
+        type: number
+    type: object
+  models.BillItem:
+    properties:
+      Product_code:
+        description: Reference to the product
+        type: string
+      bill_id:
+        description: Reference to the related bill
+        type: integer
+      id:
+        type: integer
+      price:
+        type: number
+      product_gst:
+        type: number
+      quantity:
+        type: integer
+    type: object
+  models.BillItemRequest:
+    properties:
+      productCode:
+        example: P12
+        type: string
+      quantity:
+        example: 20
+        type: integer
+    required:
+    - productCode
+    - quantity
+    type: object
+  models.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  models.GenerateBillRequest:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/models.BillItemRequest'
+        type: array
+    required:
+    - items
+    type: object
+  models.LoginRequest:
+    properties:
+      password:
+        example: Vipin@123
+        minLength: 8
+        type: string
+      username:
+        example: VIPIN
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  models.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  models.Product:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      product_code:
+        type: string
+      product_description:
+        type: string
+      product_gst:
+        type: number
+      product_name:
+        type: string
+      product_price:
+        type: number
+      quantity:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  models.SearchProductRequest:
+    properties:
+      productCode:
+        example: P001
+        type: string
+      productName:
+        example: Book
+        type: string
+    required:
+    - productCode
+    - productName
+    type: object
+  models.SearchProductResponse:
+    properties:
+      products:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+    type: object
+info:
+  contact: {}
+  description: This is a sample API
+  title: GST Billing API
+  version: "1.0"
+paths:
+  /v1/login:
+    post:
+      consumes:
+      - application/json
+      description: Login user
+      parameters:
+      - description: Login request
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Login user
+      tags:
+      - Login
+  /v1/login/bill/generate:
+    post:
+      consumes:
+      - application/json
+      description: Generate bill
+      parameters:
+      - description: GenerateBill request
+        in: body
+        name: billRequest
+        required: true
+        schema:
+          $ref: '#/definitions/models.GenerateBillRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Bill'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Generate bill
+      tags:
+      - GenerateBill
+  /v1/login/products/add:
+    post:
+      consumes:
+      - application/json
+      description: Add product
+      parameters:
+      - description: Add product request
+        in: body
+        name: addProductRequest
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AddProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Add product
+      tags:
+      - Products
+  /v1/login/products/search:
+    post:
+      consumes:
+      - application/json
+      - application/json
+      description: Search product
+      parameters:
+      - description: Search product request
+        in: body
+        name: searchProductRequest
+        required: true
+        schema:
+          $ref: '#/definitions/models.SearchProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SearchProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Search product
+      tags:
+      - Products
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+    x-extention-openapi: '{"example": "This is a sample API"}'
+swagger: "2.0"
